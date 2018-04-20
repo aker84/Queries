@@ -58,7 +58,7 @@ namespace Queriess
                 string[] materialData = new string[2];
                 MySqlCommand getMaterialData = new MySqlCommand("SELECT material, costPerCube FROM materials WHERE idMaterials=@idMaterials", MySQlConnection);
                 //Добавить AND residue > x в запрос, если нид материал в наличии
-                getMaterialData.Parameters.AddWithValue("idMaterials", reply_material.idMaterials); //тут у меня реплая нет, но там должно робить
+                getMaterialData.Parameters.AddWithValue("idMaterials", reply_material.id_Materials); 
                 MySqlDataReader sqlReader = getMaterialData.ExecuteReader();
                 while (sqlReader.Read())
                 {
@@ -80,7 +80,7 @@ namespace Queriess
             {
                 MySQlConnection.Open();
                 MySqlCommand getMaterialResidue = new MySqlCommand("SELECT residue FROM materials WHERE idMaterials=@idMaterials", MySQlConnection);
-                getMaterialResidue.Parameters.AddWithValue("idMaterials", reply_material.idMaterials);
+                getMaterialResidue.Parameters.AddWithValue("idMaterials", reply_material.id_Materials);
                 float MaterialResidue = (float)getMaterialResidue.ExecuteScalar();
                 MySQlConnection.Close();
                 return MaterialResidue;
@@ -92,5 +92,60 @@ namespace Queriess
             }
         }
 
-    }
+        public static float GetMaterialCost()
+        {
+            try
+            {
+                MySQlConnection.Open();
+                MySqlCommand getMaterialCost = new MySqlCommand("SELECT costPerCube FROM materials WHERE idMaterials=@idMaterials", MySQlConnection);
+                getMaterialCost.Parameters.AddWithValue("idMaterials", reply_material.id_Materials);
+                float MaterialCost = (float)getMaterialCost.ExecuteScalar();
+                MySQlConnection.Close();
+                return MaterialCost;
+            }
+            catch
+            {
+                MySQlConnection.Close();
+                return 0;
+            }
+        }
+
+        public static float GetOrderVolume()
+        {
+            try
+            {
+                MySQlConnection.Open();
+                MySqlCommand getOrderVolume = new MySqlCommand("SELECT volume FROM orders WHERE idOrders=@idOrders", MySQlConnection);
+                getOrderVolume.Parameters.AddWithValue("idOrders", reply_orders.id_Orders);
+                float OrderVolume = (float)getOrderVolume.ExecuteScalar();
+                MySQlConnection.Close();
+                return OrderVolume;
+            }
+            catch
+            {
+                MySQlConnection.Close();
+                return 0;
+            }
+
+
+        }
+
+        public static string GetOrderStartDate()
+        {
+            try
+            {
+                MySQlConnection.Open();
+                MySqlCommand GetOrderStartDate = new MySqlCommand("SELECT startDate FROM orders WHERE idOrders=@idOrders", MySQlConnection);
+                GetOrderStartDate.Parameters.AddWithValue("idOrders", reply_orders.id_Orders);
+                string OrderStartDate = GetOrderStartDate.ExecuteScalar().ToString();
+                MySQlConnection.Close();
+                return OrderStartDate;
+            }
+            catch
+            {
+                MySQlConnection.Close();
+                return null;
+            }
+
+        }
 }
